@@ -1,0 +1,15 @@
+#BlueJ class context
+comment0.target=Button
+comment0.text=\r\n\ Button\ of\ UI\r\n
+comment1.params=button
+comment1.target=Button(java.lang.String)
+comment1.text=\r\n\ Constructor\ for\ name\ and\ image\r\n
+comment2.params=
+comment2.target=void\ act()
+comment3.params=
+comment3.target=void\ stopMusic()
+comment4.params=
+comment4.target=void\ hide()
+comment5.params=
+comment5.target=void\ loading()
+numComments=6
