@@ -19,11 +19,11 @@ public class Button extends Actor
                 myWorld = new scene1();
                 myWorld.level1();
             }else if(button.equals("level2")){
-                myWorld = new scene1();
-                myWorld.level2();
+                //myWorld = new scene1();
+                //myWorld.level2();
             }else if(button.equals("level3")){
-                myWorld = new scene1();
-                myWorld.level3();
+                //myWorld = new scene1();
+               // myWorld.level3();
             }
     }
     

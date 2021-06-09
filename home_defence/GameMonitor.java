@@ -14,7 +14,10 @@ public class GameMonitor extends Actor
      */
     private int destroyedTrees = 0;
     
-    private int points = 100;
+	public int round = 1;
+	public boolean houseBurned = false;
+	
+    private int points = 0;
     
     public GameMonitor(){
         updateImage();
@@ -28,24 +31,31 @@ public class GameMonitor extends Actor
         destroyedTrees++;
     }
     
-    public void decrementScore(int score){
-        //System.out.println("score = "+score);
-        if(score<=0){
-            points +=score;
-        }else{
-            points -=score;
+    public void changeScore(int score){
+		points +=score;
+        if(points<0){
+            points=0;
         }
         updateImage();
     }
-    
+    public void setRound(int round) 
+    {
+        this.round = round;
+		updateImage();
+    }   
+	
     /**
      * Creates (or re-creates) the image of the object.
      */
-    private void updateImage()
+    public void updateImage()
     {
-        setImage(new GreenfootImage("Remaining: "+points, 18, Color.BLACK, new Color(0, 0, 0, 0)));
+        setImage(new GreenfootImage("Round: "+round+", Points: "+points, 18, Color.BLACK, new Color(0, 0, 0, 0)));
     }
     
+	public void houseBurned(){
+		houseBurned = true;
+	}
+	
     public void act() 
     {
         // Add your action code here.

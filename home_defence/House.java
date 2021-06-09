@@ -26,7 +26,7 @@ public class House extends Actor
     
     public void doStuff(){
         try{
-           ((scene1)getWorld()).monitor.decrementScore(100);
+           ((scene1)getWorld()).monitor.houseBurned=true;
         }catch(Exception e){}
     }
 }

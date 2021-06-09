@@ -20,7 +20,12 @@ public class scene1 extends World
     public GameMonitor monitor = null;
     public int burningTrees = 0;
     private boolean gameRunning = false;
+	private boolean gameOver = false;
     private GreenfootSound backSound;
+	
+	private int nextRoundTimer = 900;
+	private int tmp_nextRoundTimer = 0;
+	private int roundCounter = 0;
     
     public int iDim = 40;
     public int jDim = 40;
@@ -56,36 +61,55 @@ public class scene1 extends World
     }
 
     public void act(){
+		if(gameOver){
+			return;
+		}
+		
         if(!gameRunning){
-            return;
+			if(tmp_nextRoundTimer < nextRoundTimer){
+				tmp_nextRoundTimer++;
+				return;
+			}
+			startNextRound();
         }
         
-        //System.out.println("current points = "+monitor.getPoints());
-        System.out.println("burningTrees = "+burningTrees);
-        if(monitor.getPoints()<=0){
-            gameOver();
-            gameRunning=false;
-            backSound.stop();
-            Greenfoot.playSound("defeat.mp3");
-            Button buttonMenu = new Button("defeat");
-            addObject(buttonMenu,850,450);
-            try{
-                TimeUnit.SECONDS.sleep(2);
-            }catch(Exception e){}
+		if(monitor.houseBurned){
+			gameOver();
+            
             return;
-        }
+		}
+
         if(burningTrees<=0){
-            gameOver();
-            gameRunning=false;
-            backSound.stop();
-            Greenfoot.playSound("victory.mp3");
-            Button buttonMenu = new Button("victory");
-            addObject(buttonMenu,850,450);
-            try{
-                TimeUnit.SECONDS.sleep(2);
-            }catch(Exception e){}
+			endRound();
         }
     }
+	
+	private void startNextRound(){
+		
+		System.out.println("+++++New round");
+		
+		roundCounter++;
+		monitor.setRound(roundCounter);
+		water.fill();
+        gameRunning = true;
+		
+		for(int i=0; i<roundCounter; i++){
+			startRandomFire();
+		}
+		
+	}
+	
+	private void endRound(){
+		
+		System.out.println("-----Round ended");
+		
+		gameRunning=false;
+		Greenfoot.playSound("victory.mp3");
+		
+		tmp_nextRoundTimer = 0;
+	}
+	
+	
     public void addDecor(){
         addObject(player, 1250, 350);
         addObject(player.waterShot, player.getX(), player.getY()); //Add the object to the world.
@@ -135,7 +159,7 @@ public class scene1 extends World
     }
     
     public void startingGame(){
-        backSound.playLoop();
+        //backSound.playLoop();
     }
     
     public void level1(){
@@ -145,47 +169,18 @@ public class scene1 extends World
         water.fill();
         monitor = new GameMonitor();
         addObject(monitor, 70, 20);
-        //addObject(player, 50, 40);
-        //player
+        ////addObject(player, 50, 40);
+        ////player
         addTress(fireSpread);
-        startRandomFire();
-        gameRunning = true;
-        backSound = new GreenfootSound("level1.mp3");
-        //backSound.playLoop();
-        //Greenfoot.playSound("level1.mp3");
-    }
-    
-    public void level2(){
-        int fireSpread = 35;
-        
-        addDecor();
-        water.fill();
-        monitor = new GameMonitor();
-        addObject(monitor, 70, 20);
-        addTress(fireSpread);
-        startRandomFire();
-        startRandomFire();
-        gameRunning = true;
-        //Greenfoot.playSound("level2.mp3");
-        backSound = new GreenfootSound("level2.mp3");
-        //backSound.playLoop();
-    }
-
-    public void level3(){
-        int fireSpread = 40;
-        
-        addDecor();
-        water.fill();
-        monitor = new GameMonitor();
-        addObject(monitor, 70, 20);
-        addTress(fireSpread);
-        startRandomFire();
-        startRandomFire();
-        startRandomFire();
-        gameRunning = true;
-        //Greenfoot.playSound("level3.mp3");
-        backSound = new GreenfootSound("level3.mp3");
-        //backSound.playLoop();
+		
+		startNextRound();
+        //startRandomFire();
+        //gameRunning = true;
+        //backSound = new GreenfootSound("level1.mp3");
+		
+		
+        ////backSound.playLoop();
+        ////Greenfoot.playSound("level1.mp3");
     }
 
     private void addTress(int fireSpread){
@@ -272,9 +267,20 @@ public class scene1 extends World
     
     public void gameOver(){
         //World world = getWorld();
+		
+			
         System.out.println("Game Over called");
         this.removeObjects(this.getObjects(null)); //removes all the objects in the world;
         //this.addObject(new GameOverScreen(), world.getWidth()/2, world.getHeight()/2); //adds the game over screen in the middle of the world;
+		
+		gameOver=true;
+            //backSound.stop();
+            Greenfoot.playSound("defeat.mp3");
+            Button buttonMenu = new Button("defeat");
+            addObject(buttonMenu,850,450);
+            try{
+                TimeUnit.SECONDS.sleep(2);
+            }catch(Exception e){}
         
     }
     /**

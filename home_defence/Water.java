@@ -14,7 +14,7 @@ public class Water extends Actor
      */
     
     public double water = 1000;
-    private double maxWater = 1000;
+    private double maxWater = 3000;
     private double waterUsage = 30;
     public void act() 
     {

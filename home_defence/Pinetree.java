@@ -18,6 +18,11 @@ public class Pinetree extends Actor
     public boolean isBurnt = false;
     private int fireTimer = 1000;
     private int curTimer = 0;
+	
+	private int regrowTimer = 1000;
+	private int curRegrTimer = 0;
+	private int growState = 3;
+	
     private int fireSpread = 0;
     private int fireSpreadProbability=10;
     private Fire fire;
@@ -27,6 +32,8 @@ public class Pinetree extends Actor
     public int iAr;
     public int jAr;
     
+	
+	
     public Pinetree(){
         chooseTree();
     }
@@ -46,21 +53,36 @@ public class Pinetree extends Actor
     
     public void act() 
     {
-        if(!isBurning || isBurnt){
+        if(!isBurning && isBurnt){
+			curRegrTimer++;
+			if(curRegrTimer > regrowTimer){
+				regrow();
+			}
+			
             return;
         }
+		
+        if(!isBurning && growState!=3){
+			curRegrTimer++;
+			if(curRegrTimer > regrowTimer){
+				regrow();
+			}
+			return;
+		}
         
-        curTimer++;
-        fireSpread++;
+		if(isBurning){
+			curTimer++;
+			fireSpread++;
+			if(fireSpread%60==0){
+				fireSpread=0;
+				spreadFire();
+			}
+			
+			if(curTimer > fireTimer){
+				burnt();
+			}
+		}
         
-        if(fireSpread%60==0){
-            fireSpread=0;
-            spreadFire();
-        }
-        
-        if(curTimer > fireTimer){
-            burnt();
-        }
     }
     
     
@@ -151,23 +173,33 @@ public class Pinetree extends Actor
     }
     
     private void catchFire(){
+		
         if(isBurning || isBurnt){
             return;
         }
-        
-        
+		
+		System.out.println("tree caught fire!!!!!!!!!");
+		
         fire = new Fire();
         getWorld().addObject(fire, xPos+7, yPos+7);
         
         isBurning = true;
         ((scene1)getWorld()).burningTrees++;
-        fireTimer = 600 + new Random().nextInt(600+1);
+        fireTimer = 300 + new Random().nextInt(600+1);
+		System.out.println("fire timer: "+fireTimer+",  cur_tim:"+curTimer);
         
+        try{
+           ((scene1)getWorld()).monitor.changeScore(1);
+        }catch(Exception e){}
         //fireTimer = 10 + new Random().nextInt(100+1); 
         
     }
     
     private void burnt(){
+		
+		
+		//System.out.println("tree Burned............");
+		
         int burntTree = new Random().nextInt(2+1);
         switch (burntTree) {
         case 0:
@@ -191,10 +223,11 @@ public class Pinetree extends Actor
         isBurnt = true;
         try{
            ((scene1)getWorld()).monitor.treeDestroyed();
-           ((scene1)getWorld()).monitor.decrementScore(1);
+           ((scene1)getWorld()).monitor.changeScore(5);
         }catch(Exception e){}
         getWorld().removeObject(fire);
     }
+	
     public void chop(){
         if(isBurnt){
             return;
@@ -205,13 +238,53 @@ public class Pinetree extends Actor
         setLocation(xPos+5, yPos+20);
         try{
            ((scene1)getWorld()).monitor.treeDestroyed();
-           ((scene1)getWorld()).monitor.decrementScore(2);
+           ((scene1)getWorld()).monitor.changeScore(3);
         }catch(Exception e){}
         isBurnt=true;
     }
     
+	private void prepareForRegrow(){
+		if(isBurning || !isBurnt){
+            return;
+        }
+        
+        regrowTimer = 600 + new Random().nextInt(600+1);
+	}
+	
+	
+	private void regrow(){
+		if(isBurnt){
+			curTimer=0;
+			chooseTree();
+			getImage().scale(7, 10);
+			growState=1;
+			isBurnt = false;
+			curRegrTimer =0;
+			regrowTimer = 600 + new Random().nextInt(600+1);
+		}
+		if(growState==3){
+			return;
+		}else if(growState==2){
+			growState=3;
+			curTimer=0;
+			chooseTree();
+			getImage().scale(50, 60);
+			//TODO increase size
+		}else if(growState==1){
+			curTimer=0;
+			growState=2;
+			chooseTree();
+			getImage().scale(20, 25);
+			curRegrTimer =0;
+			regrowTimer = 600 + new Random().nextInt(600+1);
+			//TODO increase size
+		}
+	}
+	
     public void extinguish(){
         
+		System.out.println("tree extinguished............");
+		
         if(isBurning){
             ((scene1)getWorld()).burningTrees--;   
         }
