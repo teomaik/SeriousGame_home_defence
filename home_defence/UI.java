@@ -49,11 +49,11 @@ public class UI extends World
         Button buttonL1 = new Button("level1");
         addObject(buttonL1,100,273);
 
-        Button buttonL2 = new Button("level2");
-        addObject(buttonL2,100,352);
+        //Button buttonL2 = new Button("level2");
+        //addObject(buttonL2,100,352);
 
-        Button buttonL3 = new Button("level3");
-        addObject(buttonL3,100,433);
+        //Button buttonL3 = new Button("level3");
+        //addObject(buttonL3,100,433);
     }
     
     public void removeObjs(){

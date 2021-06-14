@@ -21,6 +21,7 @@ public class scene1 extends World
     public int burningTrees = 0;
     private boolean gameRunning = false;
 	private boolean gameOver = false;
+	public static boolean isPaused = false;
     private GreenfootSound backSound;
 	
 	private int nextRoundTimer = 900;
@@ -61,7 +62,7 @@ public class scene1 extends World
     }
 
     public void act(){
-		if(gameOver){
+		if(gameOver || isPaused){
 			return;
 		}
 		
@@ -84,10 +85,30 @@ public class scene1 extends World
         }
     }
 	
+	public void gameUnpause(){
+		isPaused = false;
+		//Greenfoot.start();
+	}
+	public void gamePause(){
+		isPaused = true;
+		//Greenfoot.stop();
+	}
+	
+	Tip tips = new Tip();
+        //addObject(buttonMenu,200,357);
+	private void showTipQuestion(){
+		//isPaused = true;
+		gamePause();
+		addObject(tips,850,450);
+		
+		System.out.println("world.displayHelp()...............");
+		tips.displayHelp(this, monitor);
+	}
+	
 	private void startNextRound(){
 		
 		System.out.println("+++++New round");
-		
+		//Greenfoot.playSound("fire.mp3");
 		roundCounter++;
 		monitor.setRound(roundCounter);
 		water.fill();
@@ -105,6 +126,7 @@ public class scene1 extends World
 		
 		gameRunning=false;
 		Greenfoot.playSound("victory.mp3");
+		showTipQuestion();
 		
 		tmp_nextRoundTimer = 0;
 	}
@@ -181,6 +203,9 @@ public class scene1 extends World
 		
         ////backSound.playLoop();
         ////Greenfoot.playSound("level1.mp3");
+		
+		//***DEBUG
+		showTipQuestion();
     }
 
     private void addTress(int fireSpread){

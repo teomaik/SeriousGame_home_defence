@@ -1,0 +1,26 @@
+#BlueJ class context
+comment0.target=Tip
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ Tip\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=
+comment1.target=Tip()
+comment10.params=
+comment10.target=void\ removeButtons()
+comment11.params=
+comment11.target=void\ act()
+comment2.params=
+comment2.target=java.lang.String\ tempChooseTip()
+comment3.params=
+comment3.target=Question\ tempChooseQuestion()
+comment4.params=world\ mon
+comment4.target=void\ displayHelp(greenfoot.World,\ GameMonitor)
+comment5.params=world\ text\ isTip
+comment5.target=void\ displayText(greenfoot.World,\ java.lang.String,\ boolean)
+comment6.params=
+comment6.target=void\ ans_correct()
+comment7.params=
+comment7.target=void\ ans_false()
+comment8.params=
+comment8.target=void\ tipOk()
+comment9.params=
+comment9.target=void\ continueGame()
+numComments=12

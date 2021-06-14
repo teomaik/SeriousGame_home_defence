@@ -24,6 +24,10 @@ public class WaterShot extends Actor
     
     public void act() 
     {
+        if(scene1.isPaused){
+            return;
+        }
+        
         // Add your action code here.
         timer--;
         if(timer <=0){

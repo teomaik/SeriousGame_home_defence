@@ -18,6 +18,10 @@ public class Water extends Actor
     private double waterUsage = 30;
     public void act() 
     {
+        if(scene1.isPaused){
+            return;
+        }
+        
         if(water>=maxWater){
             return;
         }

@@ -25,6 +25,10 @@ public class Character extends Actor
     
     public void act() 
     {
+        if(scene1.isPaused){
+            return;
+        }
+        
         MouseInfo mouse = Greenfoot.getMouseInfo();
         if(mouse==null){
             return;

@@ -53,6 +53,10 @@ public class Pinetree extends Actor
     
     public void act() 
     {
+        if(scene1.isPaused){
+            return;
+        }
+        
         if(!isBurning && isBurnt){
 			curRegrTimer++;
 			if(curRegrTimer > regrowTimer){
@@ -178,7 +182,6 @@ public class Pinetree extends Actor
             return;
         }
 		
-		System.out.println("tree caught fire!!!!!!!!!");
 		
         fire = new Fire();
         getWorld().addObject(fire, xPos+7, yPos+7);
@@ -186,7 +189,6 @@ public class Pinetree extends Actor
         isBurning = true;
         ((scene1)getWorld()).burningTrees++;
         fireTimer = 300 + new Random().nextInt(600+1);
-		System.out.println("fire timer: "+fireTimer+",  cur_tim:"+curTimer);
         
         try{
            ((scene1)getWorld()).monitor.changeScore(1);
@@ -282,12 +284,13 @@ public class Pinetree extends Actor
 	}
 	
     public void extinguish(){
-        
-		System.out.println("tree extinguished............");
-		
-        if(isBurning){
-            ((scene1)getWorld()).burningTrees--;   
+        if(!isBurning){
+            return;			
         }
+		
+		
+            ((scene1)getWorld()).burningTrees--;  
+			//System.out.println("tree extinguished............");		
         
         isBurning = false;
         
