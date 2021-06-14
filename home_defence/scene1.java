@@ -205,7 +205,7 @@ public class scene1 extends World
         ////Greenfoot.playSound("level1.mp3");
 		
 		//***DEBUG
-		showTipQuestion();
+		//showTipQuestion();
     }
 
     private void addTress(int fireSpread){
