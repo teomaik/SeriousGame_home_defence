@@ -93,6 +93,30 @@ public class Tip extends Actor
 	Button okB;
 	Placeholder textB;
 	
+	public void showFinalTip(World world){
+		removeButtons();
+		world.addObject(this,850,450);
+        scene = world;
+		
+		textB = new Placeholder();
+		
+		GreenfootImage inner = new GreenfootImage(finalTip, 48, Color.BLACK, new Color(0, 0, 0, 0));
+        int wide = world.getWidth();
+        int high = world.getHeight()/4;
+        GreenfootImage outer = new GreenfootImage(wide, high);
+        int leftX = (wide - inner.getWidth())/2;
+        int topY = (high - inner.getHeight())/2;
+        outer.drawImage(inner, leftX, topY);
+        textB.setImage(outer);
+		world.addObject(textB,850,450);
+		//point
+		
+		okB = new Button("ok", true, this);
+		world.addObject(okB,850,650);
+        
+		
+    }
+
     public void displayHelp(World world, GameMonitor mon){
 		System.out.println("displayHelp() +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		//getWorld().addObject(this,850,450);

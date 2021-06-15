@@ -303,6 +303,7 @@ public class scene1 extends World
             Greenfoot.playSound("defeat.mp3");
             Button buttonMenu = new Button("defeat");
             addObject(buttonMenu,850,450);
+			tips.showFinalTip(this);
             try{
                 TimeUnit.SECONDS.sleep(2);
             }catch(Exception e){}
