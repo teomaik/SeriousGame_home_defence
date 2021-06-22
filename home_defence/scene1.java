@@ -20,14 +20,14 @@ public class scene1 extends World
     public GameMonitor monitor = null;
     public int burningTrees = 0;
     private boolean gameRunning = false;
-	private boolean gameOver = false;
-	public static boolean isPaused = false;
+    private boolean gameOver = false;
+    public static boolean isPaused = false;
     private GreenfootSound backSound;
-	public boolean isTutorial = false;
-	
-	private int nextRoundTimer = 900;
-	private int tmp_nextRoundTimer = 0;
-	private int roundCounter = 0;
+    public boolean isTutorial = false;
+    
+    private int nextRoundTimer = 900;
+    private int tmp_nextRoundTimer = 0;
+    private int roundCounter = 0;
     
     public int iDim = 40;
     public int jDim = 40;
@@ -42,8 +42,8 @@ public class scene1 extends World
     int yMin = 40;
     //int yMax = 800;
 
-	Tip tips = new Tip();
-	
+    Tip tips = new Tip();
+    
     public MyActor[][] actors = new MyActor[iDim][jDim];
     
     public scene1()
@@ -59,112 +59,148 @@ public class scene1 extends World
         //addObject(player, 1250, 350);
         //addObject(player.waterShot, player.getX(), player.getY()); //Add the object to the world.
         //player.waterShot.hide();
-		isPaused = true;
+        isPaused = true;
         gameRunning = false;
         prepare();
     }
 
     public void act(){
-		
-		if(Greenfoot.isKeyDown("escape") ){
-			Greenfoot.setWorld(new UI(true));
-		}
-		if(Greenfoot.isKeyDown("p") ){
-			if(this.isPaused){
-				gameUnpause();
-			}else{
-				gamePause();
-			}
-		}
-		
-		if(gameOver || isPaused){
-			return;
-		}
-		
-		if(isTutorial){
-			tutorialSteps();
-		}
-		
-        if(!gameRunning){
-			if(tmp_nextRoundTimer < nextRoundTimer){
-				tmp_nextRoundTimer++;
-				return;
-			}
-			startNextRound();
+        
+        if(Greenfoot.isKeyDown("escape") ){
+            Greenfoot.setWorld(new UI(true));
+        }
+        if(Greenfoot.isKeyDown("p") ){
+            if(this.isPaused){
+                gameUnpause();
+            }else{
+                gamePause();
+            }
         }
         
-		if(monitor.houseBurned){
-			gameOver();
+        if(gameOver || isPaused){
+            return;
+        }
+        
+        if(isTutorial){
+            tutorialSteps();
+			return;
+        }
+        
+        if(!gameRunning){
+            if(tmp_nextRoundTimer < nextRoundTimer){
+                tmp_nextRoundTimer++;
+                return;
+            }
+            startNextRound();
+        }
+        
+        if(monitor.houseBurned){
+            gameOver();
             
             return;
-		}
+        }
 
         if(burningTrees<=0){
-			endRound();
+            endRound();
         }
     }
-	
-	private int tut_round = 0;
-	private boolean tut_running = false;
-	private void tutorialSteps(){
-		if(!tut_running){
-			switch (tut_round){
-				case 0:
-					tips.showTutorialHint(this, tut_round);
-					
-					break;
-				case 1:
-					tips.showTutorialHint(this, tut_round);
-					
-					break;
-				default:
-					
-					break;
-			}
-		}
-	}
-	
-	public void gameUnpause(){
-		isPaused = false;
-		//Greenfoot.start();
-	}
-	public void gamePause(){
-		isPaused = true;
-		//Greenfoot.stop();
-	}
-	
+    
+    private int tut_round = 0;
+    private boolean tut_running = false;
+    private int tut_timer = 0;
+    private void tutorialSteps(){
+        if(!tut_running){
+            gamePause();
+            tips.showTutorialHint(this, tut_round);
+            tut_running = true;
+            if(tut_round == 2){
+                for (Pinetree tree : camp_trees){
+                    tree.doStuff();
+                }
+            }
+        }
+        tut_timer++;
+        if(tut_timer>=600){
+            tut_timer=0;
+            tut_running = false;
+            tut_round++;
+        }
+        
+        switch (tut_round){
+                case 0:
+                    
+                    break;
+                case 1:
+                    MouseInfo mouse = Greenfoot.getMouseInfo();
+                    if(mouse==null){
+                        return;
+                    }
+                    int buttonNumber = mouse.getButton();
+                    if (buttonNumber == 3 ){
+                        tut_timer = 600;
+                    }
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    MouseInfo mouse2 = Greenfoot.getMouseInfo();
+                    if(mouse2==null){
+                        return;
+                    }
+                    int buttonNumber2 = mouse2.getButton();
+                    if (buttonNumber2 == 1 ){
+                        tut_timer = 600;
+                    }
+                    break;
+                case 4:
+                    break;
+                default:
+                    Greenfoot.setWorld(new UI(true));
+                    break;
+            }
+    }
+    
+    public void gameUnpause(){
+        isPaused = false;
+        //Greenfoot.start();
+    }
+    public void gamePause(){
+        isPaused = true;
+        //Greenfoot.stop();
+    }
+    
         //addObject(buttonMenu,200,357);
-	private void showTipQuestion(){
-		//isPaused = true;
-		gamePause();
-		
-		tips.displayHelp(this, monitor);
-	}
-	
-	private void startNextRound(){
-		
-		Greenfoot.playSound("fire.mp3");
-		roundCounter++;
-		monitor.setRound(roundCounter);
-		water.fill();
+    private void showTipQuestion(){
+        //isPaused = true;
+        gamePause();
+        
+        tips.displayHelp(this, monitor);
+    }
+    
+    private void startNextRound(){
+        
+        Greenfoot.playSound("fire.mp3");
+        roundCounter++;
+        monitor.setRound(roundCounter);
+        water.fill();
         gameRunning = true;
-		
-		for(int i=0; i<(roundCounter/2)+1; i++){
-			startRandomFire();
-		}
-		
-	}
-	
-	private void endRound(){
-		
-		gameRunning=false;
-		Greenfoot.playSound("victory.mp3");
-		showTipQuestion();
-		
-		tmp_nextRoundTimer = 0;
-	}
-	
-	
+        
+        for(int i=0; i<(roundCounter/3)+1; i++){
+            startRandomFire();
+        }
+        
+    }
+    
+    private void endRound(){
+        
+        gameRunning=false;
+        Greenfoot.playSound("victory.mp3");
+        showTipQuestion();
+        
+        tmp_nextRoundTimer = 0;
+    }
+    
+    
     public void addDecor(){
         addObject(player, 1250, 350);
         addObject(player.waterShot, player.getX(), player.getY()); //Add the object to the world.
@@ -218,27 +254,27 @@ public class scene1 extends World
     }
     
     public void level1(){
-        int fireSpread = 30;
+        int fireSpread = 15;
         
         addDecor();
         water.fill();
         monitor = new GameMonitor();
         addObject(monitor, 70, 20);
         addTress(fireSpread);
-		
-		startNextRound();
+        
+        startNextRound();
     }
-	
-	public void tut_start()
+    
+    public void tut_start()
     {
         gameRunning = false;
-		tut_dec();
+        tut_dec();
     }
-	ArrayList<Pinetree> camp_trees = new ArrayList();
-	private void tut_dec()
+    ArrayList<Pinetree> camp_trees = new ArrayList();
+    private void tut_dec()
     {
         addObject(water, 97, 50);
-		addObject(player, 350, 350);
+        addObject(player, 350, 350);
         addObject(player.waterShot, player.getX(), player.getY()); //Add the object to the world.
         player.waterShot.hide();
         
@@ -248,27 +284,27 @@ public class scene1 extends World
         addObject(new Pinetree(133, 100), 133, 100);
         addObject(new Pinetree(125, 150), 125, 150);
         addObject(new Pinetree(160, 155), 160, 155);
-		
-		addObject(new Pinetree(100, 100), 500, 100);
+        
+        addObject(new Pinetree(100, 100), 500, 100);
         addObject(new Pinetree(470, 130), 470, 130);
         addObject(new Pinetree(500, 130), 500, 130);
         addObject(new Pinetree(467, 100), 467, 100);
         addObject(new Pinetree(475, 150), 475, 150);
         addObject(new Pinetree(440, 155), 440, 155);
-		
-		camp_trees.add(new Pinetree(400, 300));
-		camp_trees.add(new Pinetree(450, 300));
-		camp_trees.add(new Pinetree(400, 350));
-		camp_trees.add(new Pinetree(430, 333));
+        
+        camp_trees.add(new Pinetree(400, 300));
+        camp_trees.add(new Pinetree(450, 300));
+        camp_trees.add(new Pinetree(400, 350));
+        camp_trees.add(new Pinetree(430, 333));
         addObject(camp_trees.get(0), 400, 300);
         addObject(camp_trees.get(1), 450, 300);
         addObject(camp_trees.get(2), 400, 350);
         addObject(camp_trees.get(3), 430, 333);
-		
+        
         addObject(new Tent(), 360, 300);
     }
-	
-	
+    
+    
     private void addTress(int fireSpread){
         int xCur = xMin;
         int yCur = yMin;
@@ -353,18 +389,18 @@ public class scene1 extends World
     
     public void gameOver(){
         //World world = getWorld();
-		
-			
+        
+            
         System.out.println("Game Over called");
         this.removeObjects(this.getObjects(null)); //removes all the objects in the world;
         //this.addObject(new GameOverScreen(), world.getWidth()/2, world.getHeight()/2); //adds the game over screen in the middle of the world;
-		
-		gameOver=true;
+        
+        gameOver=true;
             //backSound.stop();
             Greenfoot.playSound("defeat.mp3");
             Button buttonMenu = new Button("defeat");
             addObject(buttonMenu,850,450);
-			tips.showFinalTip(this);
+            tips.showFinalTip(this);
             try{
                 TimeUnit.SECONDS.sleep(2);
             }catch(Exception e){}

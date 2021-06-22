@@ -50,7 +50,7 @@ public class UI extends World
         addObject(buttonL1,100,273);
 		
 		Button buttonL2 = new Button("tutorial");
-        addObject(buttonL2,100,352);
+        addObject(buttonL2,180,600);
         //Button buttonL2 = new Button("level2");
         //addObject(buttonL2,100,352);
 

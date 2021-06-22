@@ -96,8 +96,8 @@ public class Tip extends Actor
 	String[] tutorial_tips = {
         "Try to move around by moving you mouse",
         "Try use your water by pressing the mouse's right-click",
-        "Try and extinguise using the water on a fire",
-        "Try and cut down a tree by pressing the mouse's left-click"+
+        "Try and extinguise the fire by using the water on it",
+        "You can cut down trees \nby pressing the mouse's left-click while next to them"+
 				"\nTrees regrow after being cut down, or burned",
 		"Press \"escape\" to go to the main menu, or \"p\" to pause the game"
 	};

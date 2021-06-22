@@ -225,7 +225,7 @@ public class Pinetree extends Actor
         isBurnt = true;
         try{
            ((scene1)getWorld()).monitor.treeDestroyed();
-           ((scene1)getWorld()).monitor.changeScore(5);
+           ((scene1)getWorld()).monitor.changeScore(3);
         }catch(Exception e){}
         getWorld().removeObject(fire);
     }
@@ -240,7 +240,7 @@ public class Pinetree extends Actor
         setLocation(xPos+5, yPos+20);
         try{
            ((scene1)getWorld()).monitor.treeDestroyed();
-           ((scene1)getWorld()).monitor.changeScore(3);
+           ((scene1)getWorld()).monitor.changeScore(2);
         }catch(Exception e){}
         isBurnt=true;
     }
@@ -262,7 +262,7 @@ public class Pinetree extends Actor
 			growState=1;
 			isBurnt = false;
 			curRegrTimer =0;
-			regrowTimer = 600 + new Random().nextInt(600+1);
+			regrowTimer = 900 + new Random().nextInt(900+1);
 		}
 		if(growState==3){
 			return;
