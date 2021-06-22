@@ -35,6 +35,10 @@ public class PropertyTile extends Actor
     
     public void act() 
     {
+		if(scene1.isPaused){
+            return;
+        }
+		
         if(!isBurning){
             return;
         }

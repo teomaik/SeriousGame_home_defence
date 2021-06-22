@@ -23,6 +23,7 @@ public class scene1 extends World
 	private boolean gameOver = false;
 	public static boolean isPaused = false;
     private GreenfootSound backSound;
+	public boolean isTutorial = false;
 	
 	private int nextRoundTimer = 900;
 	private int tmp_nextRoundTimer = 0;
@@ -41,6 +42,8 @@ public class scene1 extends World
     int yMin = 40;
     //int yMax = 800;
 
+	Tip tips = new Tip();
+	
     public MyActor[][] actors = new MyActor[iDim][jDim];
     
     public scene1()
@@ -52,18 +55,34 @@ public class scene1 extends World
         //addDecor();
         //level3();
         
-        
         System.out.println("started...");
         //addObject(player, 1250, 350);
         //addObject(player.waterShot, player.getX(), player.getY()); //Add the object to the world.
         //player.waterShot.hide();
+		isPaused = true;
         gameRunning = false;
         prepare();
     }
 
     public void act(){
+		
+		if(Greenfoot.isKeyDown("escape") ){
+			Greenfoot.setWorld(new UI(true));
+		}
+		if(Greenfoot.isKeyDown("p") ){
+			if(this.isPaused){
+				gameUnpause();
+			}else{
+				gamePause();
+			}
+		}
+		
 		if(gameOver || isPaused){
 			return;
+		}
+		
+		if(isTutorial){
+			tutorialSteps();
 		}
 		
         if(!gameRunning){
@@ -85,6 +104,26 @@ public class scene1 extends World
         }
     }
 	
+	private int tut_round = 0;
+	private boolean tut_running = false;
+	private void tutorialSteps(){
+		if(!tut_running){
+			switch (tut_round){
+				case 0:
+					tips.showTutorialHint(this, tut_round);
+					
+					break;
+				case 1:
+					tips.showTutorialHint(this, tut_round);
+					
+					break;
+				default:
+					
+					break;
+			}
+		}
+	}
+	
 	public void gameUnpause(){
 		isPaused = false;
 		//Greenfoot.start();
@@ -94,35 +133,29 @@ public class scene1 extends World
 		//Greenfoot.stop();
 	}
 	
-	Tip tips = new Tip();
         //addObject(buttonMenu,200,357);
 	private void showTipQuestion(){
 		//isPaused = true;
 		gamePause();
-		addObject(tips,850,450);
 		
-		System.out.println("world.displayHelp()...............");
 		tips.displayHelp(this, monitor);
 	}
 	
 	private void startNextRound(){
 		
-		System.out.println("+++++New round");
-		//Greenfoot.playSound("fire.mp3");
+		Greenfoot.playSound("fire.mp3");
 		roundCounter++;
 		monitor.setRound(roundCounter);
 		water.fill();
         gameRunning = true;
 		
-		for(int i=0; i<roundCounter; i++){
+		for(int i=0; i<(roundCounter/2)+1; i++){
 			startRandomFire();
 		}
 		
 	}
 	
 	private void endRound(){
-		
-		System.out.println("-----Round ended");
 		
 		gameRunning=false;
 		Greenfoot.playSound("victory.mp3");
@@ -191,23 +224,51 @@ public class scene1 extends World
         water.fill();
         monitor = new GameMonitor();
         addObject(monitor, 70, 20);
-        ////addObject(player, 50, 40);
-        ////player
         addTress(fireSpread);
 		
 		startNextRound();
-        //startRandomFire();
-        //gameRunning = true;
-        //backSound = new GreenfootSound("level1.mp3");
-		
-		
-        ////backSound.playLoop();
-        ////Greenfoot.playSound("level1.mp3");
-		
-		//***DEBUG
-		//showTipQuestion();
     }
-
+	
+	public void tut_start()
+    {
+        gameRunning = false;
+		tut_dec();
+    }
+	ArrayList<Pinetree> camp_trees = new ArrayList();
+	private void tut_dec()
+    {
+        addObject(water, 97, 50);
+		addObject(player, 350, 350);
+        addObject(player.waterShot, player.getX(), player.getY()); //Add the object to the world.
+        player.waterShot.hide();
+        
+        addObject(new Pinetree(100, 100), 100, 100);
+        addObject(new Pinetree(130, 130), 130, 130);
+        addObject(new Pinetree(100, 130), 100, 130);
+        addObject(new Pinetree(133, 100), 133, 100);
+        addObject(new Pinetree(125, 150), 125, 150);
+        addObject(new Pinetree(160, 155), 160, 155);
+		
+		addObject(new Pinetree(100, 100), 500, 100);
+        addObject(new Pinetree(470, 130), 470, 130);
+        addObject(new Pinetree(500, 130), 500, 130);
+        addObject(new Pinetree(467, 100), 467, 100);
+        addObject(new Pinetree(475, 150), 475, 150);
+        addObject(new Pinetree(440, 155), 440, 155);
+		
+		camp_trees.add(new Pinetree(400, 300));
+		camp_trees.add(new Pinetree(450, 300));
+		camp_trees.add(new Pinetree(400, 350));
+		camp_trees.add(new Pinetree(430, 333));
+        addObject(camp_trees.get(0), 400, 300);
+        addObject(camp_trees.get(1), 450, 300);
+        addObject(camp_trees.get(2), 400, 350);
+        addObject(camp_trees.get(3), 430, 333);
+		
+        addObject(new Tent(), 360, 300);
+    }
+	
+	
     private void addTress(int fireSpread){
         int xCur = xMin;
         int yCur = yMin;

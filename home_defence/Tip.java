@@ -93,6 +93,36 @@ public class Tip extends Actor
 	Button okB;
 	Placeholder textB;
 	
+	String[] tutorial_tips = {
+        "Try to move around by moving you mouse",
+        "Try use your water by pressing the mouse's right-click",
+        "Try and extinguise using the water on a fire",
+        "Try and cut down a tree by pressing the mouse's left-click"+
+				"\nTrees regrow after being cut down, or burned",
+		"Press \"escape\" to go to the main menu, or \"p\" to pause the game"
+	};
+	public void showTutorialHint(World world, int idx){
+		removeButtons();
+		world.addObject(this,850,450);
+        scene = world;
+		
+		textB = new Placeholder();
+		
+		GreenfootImage inner = new GreenfootImage(tutorial_tips[idx], 48, Color.BLACK, new Color(0, 0, 0, 0));
+        int wide = world.getWidth();
+        int high = world.getHeight()/4;
+        GreenfootImage outer = new GreenfootImage(wide, high);
+        int leftX = (wide - inner.getWidth())/2;
+        int topY = (high - inner.getHeight())/2;
+        outer.drawImage(inner, leftX, topY);
+        textB.setImage(outer);
+		world.addObject(textB,850,450);
+		//point
+		
+		okB = new Button("ok", true, this);
+		world.addObject(okB,850,650);
+    }
+	
 	public void showFinalTip(World world){
 		removeButtons();
 		world.addObject(this,850,450);
@@ -118,12 +148,10 @@ public class Tip extends Actor
     }
 
     public void displayHelp(World world, GameMonitor mon){
-		System.out.println("displayHelp() +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		//getWorld().addObject(this,850,450);
 		
 		removeButtons();
-		
-		System.out.println("----- initial removal .......................................................");
+		world.addObject(this,850,450);
 		
 		monitor = mon;
         scene = world;
@@ -152,7 +180,10 @@ public class Tip extends Actor
     
     public void displayText(World world, String text, boolean isTip)
     {
-		System.out.println("displayText() +++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		
+		//removeButtons();
+		//world.addObject(this,850,450);
+		
 		textB = new Placeholder();
 		
 		GreenfootImage inner = new GreenfootImage(text, 48, Color.BLACK, new Color(0, 0, 0, 0));

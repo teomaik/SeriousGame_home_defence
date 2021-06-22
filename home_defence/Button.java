@@ -14,11 +14,6 @@ public class Button extends Actor
     public Button(String button){
         this.button=button;
         setImage(button+".png");
-        
-        if(button.equals("level1")){
-                myWorld = new scene1();
-                myWorld.level1();
-            }
     }
     Tip tip;
     boolean isTrue;
@@ -55,11 +50,24 @@ public class Button extends Actor
                 this.tip.tipOk();
             }else if(button.equals("level1")){
                 loading();
+                myWorld = new scene1();
+                myWorld.level1();
                 //scene1 myWorld = new scene1();
                 stopMusic();
                 myWorld.startingGame();
+				myWorld.gameUnpause();
                 Greenfoot.setWorld(myWorld);
                 //myWorld.level1();
+            }else if(button.equals("tutorial")){
+                loading();
+                myWorld = new scene1();
+                myWorld.tut_start();
+                stopMusic();
+                //myWorld.startingGame();
+				myWorld.gameUnpause();
+				myWorld.isTutorial = true;
+                Greenfoot.setWorld(myWorld);
+                //myWorld.tut_start();
             }else if(button.equals("victory") || button.equals("defeat")){
                 loading();
                 //scene1 myWorld = new scene1();
